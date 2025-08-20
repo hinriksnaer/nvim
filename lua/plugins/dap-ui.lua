@@ -57,6 +57,9 @@ return {
 
     -- Keymaps: swap between panels (press again to hide)
     local map = vim.keymap.set
+    map('n', '<leader>uW', function()
+      require('dap.ui.widgets').hover()
+    end, { desc = 'Widgets' })
     map('n', '<leader>us', function()
       toggle_layout(L.scopes)
     end, { desc = 'Scopes' })
