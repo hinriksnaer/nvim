@@ -22,6 +22,16 @@ return {
       command = mason_bin .. '/OpenDebugAD7',
     }
 
+    dap.adapters.codelldb = {
+      type = 'server',
+      port = '${port}',
+      executable = {
+        -- mason installs codelldb here by default:
+        command = vim.fn.stdpath 'data' .. '/mason/bin/codelldb',
+        args = { '--port', '${port}' },
+      },
+    }
+
     -- Remember the last Python PID (from debugpy)
     local last_pid = { python = nil }
 
@@ -72,10 +82,24 @@ return {
           { text = 'set breakpoint pending on' },
           { text = '-enable-pretty-printing' },
           { text = 'set stop-on-solib-events 1' },
-          { text = 'set solib-search-path /workspaces/tmp-torch-container/pytorch/build/lib' },
+          { text = 'set solib-search-path /root/workspace/pytorch/build/lib' },
         },
       }
     end, { desc = 'Attach GDB to last Python PID' })
+
+    vim.keymap.set('n', '<leader>dpl', function()
+      if not last_pid.python then
+        vim.notify('No Python PID captured yet. Start a Python debug session first.', vim.log.levels.WARN)
+        return
+      end
+      dap.run {
+        type = 'codelldb',
+        request = 'attach',
+        name = 'LLDB → attach to Python',
+        pid = last_pid.python, -- <- auto-uses the correct PID
+        cwd = '/root/workspace/',
+      }
+    end, { desc = 'Attach LLDB to last Python PID' })
 
     vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint' })
     vim.keymap.set('n', '<leader>ds', dap.continue, { desc = 'Continue' })
