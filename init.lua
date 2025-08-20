@@ -358,6 +358,7 @@ require('lazy').setup({
         { '<leader>l', group = 'LSP' },
         { '<leader>n', group = 'Notes' },
         { '<leader>s', group = 'Session' },
+        { '<leader>g', group = 'Code' },
       },
     },
   },
@@ -387,12 +388,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>cf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'Format buffer',
       },
     },
     opts = {
