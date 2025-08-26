@@ -1,25 +1,10 @@
 return {
   'obsidian-nvim/obsidian.nvim',
-  version = '*', -- recommended, use latest release instead of latest commit
-  ft = 'markdown',
-  -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-  -- event = {
-  --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-  --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-  --   -- refer to `:h file-pattern` for more examples
-  --   "BufReadPre path/to/my-vault/*.md",
-  --   "BufNewFile path/to/my-vault/*.md",
-  -- },
-  ---@module 'obsidian'
-  ---@type obsidian.config
-  opts = {
-    workspaces = {
-      {
-        name = 'workspace',
-        path = '~/Documents/notes',
-      },
-    },
-  },
+  version = '*',
+  ft = 'markdown', -- load only for markdown
+  dependencies = { 'nvim-lua/plenary.nvim' },
+
+  -- keymaps live here; commands exist because we configure them in opts below
   keys = {
     { '<leader>nn', '<cmd>ObsidianNew<CR>', desc = 'Obsidian: New Note' },
     { '<leader>ns', '<cmd>ObsidianSearch<CR>', desc = 'Obsidian: Search Notes' },
@@ -27,33 +12,37 @@ return {
     { '<leader>nb', '<cmd>ObsidianBacklinks<CR>', desc = 'Obsidian: Backlinks' },
     { '<leader>nt', '<cmd>ObsidianTemplate<CR>', desc = 'Obsidian: Insert Template' },
     { '<leader>np', '<cmd>ObsidianPasteImg<CR>', desc = 'Obsidian: Paste Image' },
-    -- optional advanced navigations if supported by your version:
     { '<leader>nf', '<cmd>ObsidianFollowLink<CR>', desc = 'Obsidian: Follow Link' },
   },
-  config = function()
-    require('obsidian').setup {
-      workspaces = {
-        Notes = vim.fn.expand '~/Documents/notes', -- adjust to your vault location
-      },
-      completion = {
-        nvim_cmp = true,
-        min_chars = 2,
-      },
-      new_notes_location = 'current_dir',
-      mappings = {
-        ['<leader>of'] = {
-          action = function()
-            return require('obsidian').util.gf_passthrough()
-          end,
-          opts = { noremap = false, expr = true, buffer = true },
-        },
-        ['<leader>od'] = {
-          action = function()
-            return require('obsidian').util.toggle_checkbox()
-          end,
-          opts = { buffer = true },
-        },
-      },
-    }
-  end,
+
+  opts = {
+    workspaces = {
+      { name = 'notes', path = vim.fn.expand '~/Documents/Notes' },
+    },
+
+    -- completion
+    completion = { nvim_ = false },
+
+    -- new notes behavior
+    new_notes_location = 'current_dir',
+
+    -- templates (needed for :ObsidianTemplate to work without errors)
+    templates = {
+      subdir = 'templates',
+      date_format = '%Y-%m-%d',
+      time_format = '%H:%M',
+    },
+
+    -- images (needed for :ObsidianPasteImg)
+    -- ensure you have an images folder in your vault
+    attachments = {
+      img_dir = 'images',
+      img_name_func = function()
+        return os.date 'img-%Y%m%d-%H%M%S'
+      end,
+    },
+
+    -- daily notes optional
+    daily_notes = { folder = 'dailies' },
+  },
 }
