@@ -37,6 +37,7 @@ return {
         { '<leader>fr', builtin.resume, desc = 'Resume last picker' },
         { '<leader>fs', builtin.grep_string, desc = 'Grep word under cursor' },
         { '<leader>fd', builtin.diagnostics, desc = 'Diagnostics' },
+        { '<leader>ft', builtin.colorscheme, desc = 'Themes' },
         { '<leader>/', buf_fuzzy, desc = 'Fuzzy in current buffer' },
         { '<C-p>', builtin.find_files, desc = 'Files', mode = 'n' },
       }

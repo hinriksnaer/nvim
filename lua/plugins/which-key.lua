@@ -44,16 +44,19 @@ return {
 
     -- Document existing key chains
     spec = {
-      { '<leader>f', group = 'Find' },
-      { '<leader>t', group = 'Toggle' },
-      { '<leader>g', group = 'Git' },
-      { '<leader>d', group = 'Debug' },
-      { '<leader>u', group = 'Debug UI' },
+      { '<leader>b', group = 'Buffer' },
       { '<leader>c', group = 'Code' },
-      { '<leader>e', group = 'Evaluate' },
+      { '<leader>d', group = 'Debug' },
+      { '<leader>f', group = 'Find' },
+      { '<leader>g', group = 'Git' },
+      { '<leader>gt', group = 'Toggle' },
       { '<leader>l', group = 'LSP' },
+      { '<leader>m', group = 'Messages' },
       { '<leader>n', group = 'Notes' },
+      { '<leader>o', group = 'Oil' },
       { '<leader>s', group = 'Session' },
+      { '<leader>T', group = 'Treesitter' },
+      { '<leader>w', group = 'Windows' },
     },
   },
 }
