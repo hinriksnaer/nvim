@@ -1,6 +1,8 @@
-# PyTorch Source Python + C++ NeoVim setup
+# PyTorch Development Neovim Configuration
 
-A fast, batteries-included Neovim config focused on **mixed C++/Python** projects (think: C++ libs, Python front-ends, pybind11/C API, and Jupyter-style iteration). It’s built on top of the Kickstart base but trimmed and tuned for day-to-day systems + scientific work.
+A production-ready Neovim configuration built specifically for **PyTorch development** and **mixed-mode C++/Python debugging**. Optimized for working on PyTorch source code, C++ extensions, pybind11 bindings, and Python frontends with seamless debugging across both languages.
+
+Built on Kickstart.nvim and enhanced with professional tooling for deep learning systems work.
 
 ## Quick start
 
@@ -15,54 +17,131 @@ nvim
 
 > Tip: Run `:Mason` once to see installable tools and `:LspInfo` to confirm LSPs are attached.
 
-## What you get
+## Key Features
 
-* **Language Servers (LSP)** via `mason` + `lspconfig`
+### 🔥 Mixed-Mode Debugging (Python + C++)
+* **debugpy** for Python debugging with full DAP UI integration
+* **codelldb** for C++ debugging with LLDB backend
+* **Seamless transitions** between Python and C++ stack frames
+* **Attach to running Python processes** and step into C++ extensions
+* Specialized configurations for PyTorch development workflows
 
-  * **C++:** `clangd` (semantic indexing, cross-file nav, code actions)
-  * **Python:** `pyright` (type checking), optional `ruff-lsp` (fast linting)
-* **Formatting & Linting**
+### 🛠️ Language Support
+* **C++ (clangd):** Semantic indexing, cross-file navigation, code actions, IntelliSense
+* **Python (pyright):** Type checking, intelligent completion, import resolution
+* **Treesitter:** Advanced syntax highlighting for C, C++, Python, CMake, CUDA, JSON, TOML, Markdown
+* **Auto-formatting:** clang-format (C++), conform.nvim (Python)
 
-  * **C++:** `clang-format` (project-local `.clang-format` respected)
-  * **Python:** `black` and/or `ruff` (choose on save)
-* **Treesitter** for modern syntax highlighting and structural selection (C, C++, Python, CMake, JSON, TOML, Markdown…)
-* **Completion** with `nvim-cmp` (+ snippets)
-* **Fuzzy finding** with `telescope` (+ live grep, symbols, diagnostics)
-* **Git UX** with inline hunks & blame
-* **Debugging** with `nvim-dap`
+### 🔍 Navigation & Search
+* **Telescope:** Fuzzy file finding, live grep, LSP symbols, diagnostics
+* **Flash.nvim:** Lightning-fast cursor navigation with jump labels
+* **Harpoon:** Quick file bookmarking for frequent files
+* **Oil.nvim:** File explorer with vim-like buffer editing
 
-  * **C/C++:** `codelldb`
-  * **Python:** `debugpy`
-* **Quality-of-life**
+### 🪟 Window & Session Management
+* **smart-splits.nvim:** Seamless navigation between Neovim and tmux panes
+* **persistence.nvim:** Automatic session management
+* **Smart window operations** under `<leader>w`
 
-  * which-key hints, better diagnostics, commenting, TODO highlighters, statusline, etc.
+### 📝 Code Intelligence
+* **blink.cmp:** Fast, modern completion engine
+* **Which-key:** Discoverable keybindings with instant hints
+* **Gitsigns:** Inline git hunks, blame, and staging
+* **Spectre:** Project-wide search and replace
+
+### 🎨 UI Enhancements
+* **Noice.nvim:** Beautiful command-line and notification UI
+* **Snacks.nvim:** Utility functions for buffers, notifications, and pickers
+* **Todo-comments:** Highlight and search TODO/FIXME/NOTE comments
+* **Indent-blankline:** Visual indent guides
 
 > The base kickstart README in this repo was replaced to document these language-specific defaults. (Previously it contained the generic Kickstart install text.) ([GitHub][1])
 
-## Mixed C++ ↔ Python workflows
+## PyTorch & Mixed-Mode Debugging Workflows
 
-* **Editing**
-  Open both sides of your project; LSPs run per-language. Treesitter and diagnostics work across buffers.
+### Debugging PyTorch C++ Extensions
+This configuration excels at debugging PyTorch development scenarios:
 
-* **Building C++ for Python**
-  Use your usual build (CMake/meson) to produce a Python extension (e.g., pybind11). From Neovim:
+1. **Python → C++ debugging:**
+   ```
+   - Set breakpoints in your Python code
+   - Press <leader>ds to start debugging with debugpy
+   - Step through Python until you hit pybind11/C API calls
+   - Attach codelldb to the Python process (<F8> - custom config)
+   - Step into C++ implementation seamlessly
+   ```
 
-  * `:make` or your CMake commands in a terminal split
-  * Reload your Python module inside a Python REPL/pytest run
+2. **Debugging PyTorch operators:**
+   - Debug Python tests that call custom operators
+   - Step into ATen/C++ kernel implementations
+   - Inspect tensors at both Python and C++ levels
 
-* **Debugging**
+3. **Standalone C++ debugging:**
+   - Launch native binaries directly with codelldb
+   - Debug libtorch applications
+   - Test C++ kernels in isolation
 
-  * **Python app calling into C++:** Start Python with DAP (`:DapContinue`), then attach C++ with `codelldb` if needed.
-  * **Native binary:** Launch with the C++ debug config; breakpoints work as usual.
+### Building & Development Workflow
+* **CMake/Meson integration:** Run builds in terminal splits
+* **Hot reload:** Rebuild C++ extensions and reload Python modules without restarting Neovim
+* **Quick iteration:** Edit C++, compile, test Python in one environment
 
-## Everyday commands
+### DAP UI Features
+* **Automatic UI toggle:** Debug UI opens on start, closes on exit
+* **Two-panel layout:** Variables/watches on left, stack/breakpoints at bottom
+* **Evaluate expressions:** `<leader>de` in visual mode to inspect selected code
+* **Hover values:** See variable values inline while debugging
 
-* **Search files / symbols / grep:** `:Telescope find_files`, `:Telescope live_grep`, `:Telescope lsp_document_symbols`
-* **LSP:** `gd` (goto def), `gr` (references), `K` (hover), code actions, rename
-* **Diagnostics:** `:Telescope diagnostics` or jump via next/prev
-* **Format now:** `:Format` (respects language/Project settings)
-* **Mason UI:** `:Mason` (manage LSPs/formatters/debuggers)
-* **DAP:** `:DapContinue`, `:DapToggleBreakpoint`, `:DapStepOver`
+## Essential Keybindings
+
+### Finding & Navigation
+* `<leader>ff` - Find files
+* `<leader>fg` - Live grep (ripgrep)
+* `<leader>fb` - Browse buffers
+* `<leader>fs` - Grep word under cursor
+* `<leader>ft` - Theme picker (colorscheme)
+* `<C-h/j/k/l>` - Navigate windows (tmux-aware)
+* `s` - Flash jump to any visible location
+
+### LSP & Code
+* `gd` - Go to definition
+* `gr` - Find references
+* `K` - Hover documentation
+* `<leader>ca` - Code actions
+* `<leader>cn` - Rename symbol
+* `<leader>cf` - Format buffer
+* `[d` / `]d` - Previous/next diagnostic
+
+### Debugging (DAP)
+* `<leader>ds` - Start/continue debugging
+* `<leader>db` - Toggle breakpoint
+* `<leader>dn` - Step over
+* `<leader>di` - Step into
+* `<leader>du` - Step out
+* `<leader>dx` - Toggle DAP UI
+* `<leader>de` - Evaluate expression
+
+### Git
+* `<leader>gs` - Stage hunk
+* `<leader>gr` - Reset hunk
+* `<leader>gb` - Blame line
+* `<leader>gD` - Open diffview
+* `<leader>gh` - File history
+* `<leader>gtb` - Toggle blame line
+
+### Windows & Buffers
+* `<leader>wv` - Split vertically
+* `<leader>ws` - Split horizontally
+* `<leader>wc` - Close window
+* `<leader>we` - Equalize windows
+* `<leader>bd` - Delete buffer
+* `<leader><leader>` - Switch to alternate buffer
+
+### Messages & Sessions
+* `<leader>ml` - Last message
+* `<leader>mh` - Message history
+* `<leader>ss` - Restore session
+* `<leader>sl` - Restore last session
 
 ## Troubleshooting
 

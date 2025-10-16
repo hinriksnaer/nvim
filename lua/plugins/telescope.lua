@@ -63,6 +63,9 @@ return {
         },
         pickers = {
           find_files = { hidden = true }, -- show dotfiles too
+          colorscheme = {
+            enable_preview = true, -- live preview themes as you hover
+          },
         },
         extensions = {
           fzf = {
