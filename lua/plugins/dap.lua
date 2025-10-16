@@ -106,8 +106,9 @@ return {
     vim.keymap.set('n', '<leader>dn', dap.step_over, { desc = 'Step Next' })
     vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Step Into' })
     vim.keymap.set('n', '<leader>du', dap.step_out, { desc = 'Step Out' })
-    vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = 'REPL' })
     vim.keymap.set('n', '<leader>dc', dap.run_to_cursor, { desc = 'Run to Cursor' })
     vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'Terminate' })
+    vim.keymap.set('n', '<leader>dU', dap.up, { desc = 'Up Stack' })
+    vim.keymap.set('n', '<leader>dI', dap.down, { desc = 'Down Stack' })
   end,
 }

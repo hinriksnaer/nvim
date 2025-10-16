@@ -4,144 +4,54 @@ return {
   config = function()
     local dap, dapui = require 'dap', require 'dapui'
 
-    -- One layout per view, all on the RIGHT, full height
+    -- Conventional DAP UI setup with default layouts
     dapui.setup {
       layouts = {
-        { elements = { { id = 'scopes', size = 1.0 } }, size = 0.33, position = 'right' }, -- 1
-        { elements = { { id = 'breakpoints', size = 1.0 } }, size = 0.33, position = 'right' }, -- 2
-        { elements = { { id = 'stacks', size = 1.0 } }, size = 0.33, position = 'right' }, -- 3
-        { elements = { { id = 'watches', size = 1.0 } }, size = 0.33, position = 'right' }, -- 4
-        { elements = { { id = 'repl', size = 1.0 } }, size = 0.33, position = 'right' }, -- 5
-        { elements = { { id = 'console', size = 1.0 } }, size = 0.33, position = 'right' }, -- 6
         {
-          elements = { { id = 'watches', size = 0.66 }, { id = 'repl', size = 0.34 } },
-          size = 0.33,
-          position = 'right',
-        }, -- 7: Watches+REPL
+          elements = {
+            { id = 'scopes', size = 0.25 },
+            { id = 'breakpoints', size = 0.25 },
+            { id = 'stacks', size = 0.25 },
+            { id = 'watches', size = 0.25 },
+          },
+          size = 40,
+          position = 'left',
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+            { id = 'console', size = 0.5 },
+          },
+          size = 10,
+          position = 'bottom',
+        },
       },
-      controls = { enabled = false },
-      floating = { border = 'rounded' },
+      controls = {
+        enabled = true,
+        element = 'repl',
+      },
+      floating = { border = 'rounded', mappings = { close = { 'q', '<Esc>' } } },
       expand_lines = true,
     }
 
-    -- ----- Single-panel switcher -----
-    local L = { scopes = 1, breakpoints = 2, stacks = 3, watches = 4, repl = 5, console = 6, watches_repl = 7 }
-    local current -- currently open layout index, or nil
-
-    local function close_all()
-      for idx = 1, 7 do
-        pcall(dapui.close, { layout = idx })
-      end
+    -- Automatically open/close DAP UI
+    dap.listeners.after.event_initialized['dapui_config'] = function()
+      dapui.open()
+    end
+    dap.listeners.before.event_terminated['dapui_config'] = function()
+      dapui.close()
+    end
+    dap.listeners.before.event_exited['dapui_config'] = function()
+      dapui.close()
     end
 
-    local function toggle_layout(idx)
-      if current == idx then
-        pcall(dapui.close, { layout = idx })
-        current = nil
-      else
-        close_all()
-        pcall(dapui.open, { layout = idx })
-        current = idx
-      end
-    end
-
-    -- NEW: refresh current panel (or Watches if none) to update views
-    local function refresh_panel()
-      local idx = current or L.watches
-      pcall(dapui.close, { layout = idx })
-      -- tiny defer to let UI settle before reopening
-      vim.defer_fn(function()
-        pcall(dapui.open, { layout = idx })
-      end, 10)
-    end
-
-    -- Keymaps: swap between panels (press again to hide)
+    -- Keymaps
     local map = vim.keymap.set
-    map('n', '<leader>uW', function()
+    map('n', '<leader>dx', dapui.toggle, { desc = 'Toggle DAP UI' })
+    map('n', '<leader>de', dapui.eval, { desc = 'Evaluate Expression' })
+    map('v', '<leader>de', dapui.eval, { desc = 'Evaluate Selection' })
+    map('n', '<leader>dh', function()
       require('dap.ui.widgets').hover()
     end, { desc = 'Widgets' })
-    map('n', '<leader>us', function()
-      toggle_layout(L.scopes)
-    end, { desc = 'Scopes' })
-    map('n', '<leader>ub', function()
-      toggle_layout(L.breakpoints)
-    end, { desc = 'Breakpoints' })
-    map('n', '<leader>ut', function()
-      toggle_layout(L.stacks)
-    end, { desc = 'Stacks' })
-    map('n', '<leader>uw', function()
-      toggle_layout(L.watches)
-    end, { desc = 'Watches' })
-    map('n', '<leader>ur', function()
-      toggle_layout(L.repl)
-    end, { desc = 'REPL' })
-    map('n', '<leader>uc', function()
-      toggle_layout(L.console)
-    end, { desc = 'Console' })
-    map('n', '<leader>ud', function()
-      toggle_layout(L.watches_repl)
-    end, { desc = 'Watches+REPL (66/33)' })
-    map('n', '<leader>ux', function()
-      close_all()
-      current = nil
-    end, { desc = 'Close all' })
-
-    local function dapui_add_watch()
-      local expr = vim.fn.input 'Add to watch: '
-      if vim.fn.empty(expr) ~= 0 then
-        return
-      end
-      dapui.elements.watches.add(expr)
-    end
-
-    local function dapui_prompt_eval()
-      local expr = vim.fn.input 'Expression: '
-      if vim.fn.empty(expr) ~= 0 then
-        return
-      end
-      dapui.eval(expr, {})
-    end
-
-    -- Eval current line, ignoring "foo =" at the start if present
-    local function dapui_eval_line()
-      local line = vim.api.nvim_get_current_line()
-      line = line:gsub('^%s*[%w_]+%s*=%s*', '')
-      if vim.fn.empty(line) ~= 0 then
-        return
-      end
-      dapui.eval(line, {})
-    end
-
-    local function dapui_execute_line()
-      local line = vim.api.nvim_get_current_line()
-      if vim.fn.empty(line) ~= 0 then
-        return
-      end
-      dap.repl.execute(line)
-      refresh_panel()
-    end
-
-    -- Visual selection → execute directly in REPL
-    local function dapui_execute_visual()
-      local bufnr = 0
-      local srow, scol = unpack(vim.api.nvim_buf_get_mark(bufnr, '<'))
-      local erow, ecol = unpack(vim.api.nvim_buf_get_mark(bufnr, '>'))
-      srow, scol, erow, ecol = srow - 1, scol, erow - 1, ecol + 1
-      local lines = vim.api.nvim_buf_get_text(bufnr, srow, scol, erow, ecol, {})
-      local text = table.concat(lines, '\n')
-      if vim.fn.empty(text) ~= 0 then
-        return
-      end
-      dap.repl.execute(text)
-      refresh_panel()
-    end
-
-    map('n', '<leader>ee', dapui_prompt_eval, { desc = 'Evaluate expression', silent = true })
-    map('n', '<leader>el', dapui_eval_line, { desc = 'Current line (no declaration)', silent = true })
-    map('n', '<leader>eL', dapui_execute_line, { desc = 'Current line', silent = true })
-    map('n', '<leader>er', dapui.eval, { desc = 'Regular', silent = true })
-    map('n', '<leader>dw', dapui_add_watch, { desc = 'Add Watch', silent = true })
-    map('v', '<leader>e', dapui.eval, { desc = 'Evaluate Selection', silent = true })
-    map('v', '<leader>E', dapui_execute_visual, { desc = 'Execute Selection', silent = true })
   end,
 }
