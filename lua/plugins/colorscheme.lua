@@ -191,17 +191,6 @@ return {
     },
   },
 
-  -- GitHub theme - Light and dark variants
-  {
-    'projekt0n/github-nvim-theme',
-    priority = 1000,
-    opts = {
-      options = {
-        transparent = false,
-      },
-    },
-  },
-
   -- Melange - Warm, cozy colorscheme
   {
     'savq/melange-nvim',
