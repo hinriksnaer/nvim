@@ -67,7 +67,7 @@ return {
 
         -- Hover & Info
         map('K', vim.lsp.buf.hover, 'Hover Documentation')
-        map('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+        map('<leader>lk', vim.lsp.buf.signature_help, 'Signature Documentation')
 
         -- Actions
         map('<leader>cn', vim.lsp.buf.rename, 'Rename')
