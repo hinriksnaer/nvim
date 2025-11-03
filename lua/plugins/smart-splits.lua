@@ -30,19 +30,6 @@ return {
     vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up, { desc = 'Resize window up' })
     vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right, { desc = 'Resize window right' })
 
-    -- Window management under <leader>w
-    vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Next window' })
-    vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window' })
-    vim.keymap.set('n', '<leader>wo', '<C-w>o', { desc = 'Close other windows' })
-    vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split vertically' })
-    vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Split horizontally' })
-    vim.keymap.set('n', '<leader>we', '<C-w>=', { desc = 'Equal window sizes' })
-    vim.keymap.set('n', '<leader>wm', '<C-w>_<C-w>|', { desc = 'Maximize window' })
-
-    -- Swap windows (move buffer to different window)
-    vim.keymap.set('n', '<leader>wh', require('smart-splits').swap_buf_left, { desc = 'Swap with left' })
-    vim.keymap.set('n', '<leader>wj', require('smart-splits').swap_buf_down, { desc = 'Swap with below' })
-    vim.keymap.set('n', '<leader>wk', require('smart-splits').swap_buf_up, { desc = 'Swap with above' })
-    vim.keymap.set('n', '<leader>wl', require('smart-splits').swap_buf_right, { desc = 'Swap with right' })
+    -- Note: Window management moved to Hydra (<leader>w)
   end,
 }
