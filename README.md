@@ -166,15 +166,31 @@ def test_custom_op():
 
 ### Debugging
 
+**Standalone Keybindings:**
+
 | Key | Action |
 |-----|--------|
-| `<leader>ds` | Start/continue debugging |
 | `<leader>db` | Toggle breakpoint |
-| `<leader>dn` | Step over |
-| `<leader>di` | Step into |
-| `<leader>du` | Step out |
-| `<leader>dx` | Toggle DAP UI |
 | `<leader>de` | Evaluate expression (visual mode) |
+
+**🌊 Debug Mode Hydra** (`<leader>dm` to enter)
+
+Once in Debug Mode, use these single-key commands:
+
+| Key | Action |
+|-----|--------|
+| `s` | Start/continue debugging |
+| `n` | Step over (next) |
+| `i` | Step into |
+| `o` | Step out |
+| `c` | Run to cursor |
+| `b` | Toggle breakpoint |
+| `t` | Terminate session |
+| `x` | Toggle DAP UI |
+| `g` | Go to stopped location |
+| `[` / `]` | Navigate stack up/down |
+| `v` / `w` / `r` | Focus variables/watches/REPL |
+| `q` / `<Esc>` | Exit Debug Mode |
 
 ### Git
 
@@ -189,14 +205,30 @@ def test_custom_op():
 
 ### Buffers & Windows
 
+**Buffer Management:**
+
 | Key | Action |
 |-----|--------|
-| `<leader>wv` | Split vertically |
-| `<leader>ws` | Split horizontally |
-| `<leader>wc` | Close window |
-| `<leader>we` | Equalize windows |
 | `<leader>bd` | Delete buffer |
+| `<leader>bD` | Delete all buffers except current |
 | `<leader><leader>` | Switch to alternate buffer |
+| `[b` / `]b` | Previous/next buffer |
+
+**🌊 Window Mode Hydra** (`<leader>w` to enter)
+
+Once in Window Mode, use these single-key commands:
+
+| Key | Action |
+|-----|--------|
+| `h` / `j` / `k` / `l` | Navigate between windows |
+| `s` | Split horizontally |
+| `v` | Split vertically |
+| `c` | Close window |
+| `<` / `>` | Decrease/increase width |
+| `+` / `-` | Increase/decrease height |
+| `=` | Equalize window sizes |
+| `u` | Undo close (restore last) |
+| `q` / `<Esc>` | Exit Window Mode |
 
 > **Tip**: Press `<leader>?` to see all available keybindings with which-key
 
