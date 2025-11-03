@@ -238,11 +238,32 @@ The configuration is organized into modular files:
 
 ```
 ~/.config/nvim/
-├── init.lua              # Entry point
+├── init.lua                      # Entry point & lazy.nvim setup
+├── doc/                          # Documentation files
 ├── lua/
-│   ├── core/            # Core Neovim settings
-│   ├── plugins/         # Plugin configurations
-│   └── keymaps.lua      # Keybinding definitions
+│   ├── config/                   # Core Neovim settings
+│   │   ├── options.lua           # Vim options
+│   │   ├── keymaps.lua           # Basic keybindings
+│   │   └── autocmds.lua          # Autocommands
+│   └── plugins/                  # Plugin configurations
+│       ├── dap/                  # Debug Adapter Protocol
+│       │   ├── init.lua          # DAP setup
+│       │   ├── adapters.lua      # Language adapters
+│       │   ├── keymaps.lua       # Standalone debug keys
+│       │   ├── python.lua        # Python debugging
+│       │   ├── ui.lua            # DAP UI configuration
+│       │   └── signs.lua         # Breakpoint signs
+│       ├── hydra/                # Hydra modal keybindings
+│       │   ├── init.lua          # Hydra plugin setup
+│       │   ├── debug.lua         # Debug Mode Hydra
+│       │   ├── window.lua        # Window Mode Hydra
+│       │   └── tmux.lua          # Tmux navigation
+│       ├── lspconfig.lua         # LSP configuration
+│       ├── telescope.lua         # Fuzzy finder
+│       ├── completion.lua        # blink.cmp setup
+│       ├── treesitter.lua        # Syntax highlighting
+│       ├── gitsigns.lua          # Git integration
+│       └── [other plugins...]    # Additional plugins
 ```
 
 To customize, edit the relevant files and restart Neovim. All plugin configurations use lazy.nvim for fast startup times.
