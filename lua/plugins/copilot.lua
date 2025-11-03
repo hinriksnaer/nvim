@@ -9,9 +9,10 @@ return {
       auto_trigger = true,
       hide_during_completion = vim.g.ai_cmp,
       keymap = {
-        accept = '<tab>',
+        accept = '<C-y>',      -- Ctrl+y to accept (common completion binding)
         next = '<M-]>',
         prev = '<M-[>',
+        dismiss = '<C-e>',     -- Ctrl+e to dismiss (common completion binding)
       },
     },
     panel = { enabled = false },
